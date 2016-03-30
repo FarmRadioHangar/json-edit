@@ -1,58 +1,18 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React      from 'react'
+import ReactDOM   from 'react-dom'
+import reducers   from './reducers'
+import JsonObject from './jsonobject'
 
-class JsonObject extends React.Component {
-  renderValue(value) {
-    switch (typeof value) {
-      case 'number':
-      case 'string':
-	return (
-	  <input type='text' defaultValue={value} /> 
-	)
-      case 'boolean':
-	return (
-	  <select defaultValue={value}> 
-	    <option value='true'>true</option>
-	    <option value='false'>false</option>
-	  </select> 
-	)
-      case 'object':
-	if (Array.isArray(value)) {
-	  return (
-	    <div>
-  	      {value.map(this.renderValue)}
-	    </div>
-	  )
-	} else {
-          return (
-	    <JsonObject object={value} />
-	  )
-	}
-      default:
-    }
-  }
-  render() {
-    const { object } = this.props
-    return (
-      <div>
-	{Object.keys(object).map(key => (
-          <dl>
-            <dt>
-              {key}
-    	    </dt>
-            <dd>
-              {this.renderValue(object[key])}
-            </dd>
-	  </dl>
-	))}
-      </div>
-    )
-  }
-}
+import { createStore } 
+  from 'redux'
+import { Provider } 
+  from 'react-redux'
+
+const store = createStore(reducers)
 
 const object = {
   tigo1: {
-    imei: '1301312371823719278319237',
+    imei: 'texttexttext',
   },
   vodacom1: {
     imei: '1301312355555555278319237',
@@ -60,14 +20,15 @@ const object = {
   },
   abc: {
     def: {
-      ghi: {
-      },
+      ghi: {},
       x: 123123123,
     },
   },
 }
 
 ReactDOM.render(
-  <JsonObject object={object} />,
+  <Provider store={store}>
+    <JsonObject object={object} />
+  </Provider>,
   document.getElementById('main')
 )
