@@ -17,28 +17,44 @@ const initialObject = {
   },
 }
 
-function cast(value, type) {
-  if (!type)
-    return value
-  switch (type) {
-    case 'boolean': {
-      if ('string' === typeof value) {
-	return ('true' === value)
-      } else {
-	return !!value
-      }
-    }
-    default:
-      return value
-  }
+const initialSchema = {
+  tigo1: {
+    imei: 'string',
+  },
+  vodacom1: {
+    imei: 'string',
+    afsdf: [{b: 'string'}, 'boolean', 'boolean', 'number'],
+  },
+  abc: {
+    def: {
+      ghi: {},
+      x: 'number',
+    },
+  },
 }
 
-function patchedObject(data, path, value, valueType, match = true) {
+//function cast(value, type) {
+//  if (!type)
+//    return value
+//  switch (type) {
+//    case 'boolean': {
+//      if ('string' === typeof value) {
+//	return ('true' === value)
+//      } else {
+//	return !!value
+//      }
+//    }
+//    default:
+//      return value
+//  }
+//}
+
+function patchedObject(data, path, value, match = true) {
   const it = (key, val) => {
     const match_ = match && key == path[0]
     return (1 === path.length && match_) 
-  	? cast(value, valueType)
-  	: patchedObject(val, path.slice(1), value, valueType, match_)
+  	? value
+  	: patchedObject(val, path.slice(1), value, match_)
   }
   switch (typeof data) {
     case 'object':
@@ -56,7 +72,14 @@ function patchedObject(data, path, value, valueType, match = true) {
 function object(state = initialObject, action) {
   switch (action.type) {
     case 'PATCH':
-      return patchedObject(state, action.path, action.value, action.valueType)
+      return patchedObject(state, action.path, action.value)
+    default:
+      return state
+  }
+}
+
+function schema(state = initialSchema, action) {
+  switch (action.type) {
     default:
       return state
   }
@@ -64,4 +87,5 @@ function object(state = initialObject, action) {
 
 export default combineReducers({
   object,
+  schema,
 })

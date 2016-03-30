@@ -39,105 +39,113 @@ var JsonValue = function (_React$Component) {
 				value: function render() {
 						var _props = this.props;
 						var value = _props.value;
+						var schema = _props.schema;
 						var path = _props.path;
 						var dispatch = _props.dispatch;
 
-						switch (typeof value === 'undefined' ? 'undefined' : _typeof(value)) {
-								case 'number':
-								case 'string':
+						if ('object' === (typeof value === 'undefined' ? 'undefined' : _typeof(value))) {
+								if (Array.isArray(value)) {
+										return _react2.default.createElement(
+												'table',
+												null,
+												value.map(function (el, i) {
+														return _react2.default.createElement(
+																'tr',
+																{ key: i },
+																_react2.default.createElement(
+																		'td',
+																		null,
+																		i,
+																		' '
+																),
+																_react2.default.createElement(
+																		'td',
+																		null,
+																		_react2.default.createElement(JsonValue, {
+																				dispatch: dispatch,
+																				path: [].concat(_toConsumableArray(path), [i]),
+																				value: value[i],
+																				schema: schema[i]
+																		})
+																)
+														);
+												})
+										);
+								} else {
 										return _react2.default.createElement(
 												'div',
 												null,
-												_react2.default.createElement('input', {
-														type: 'text',
-														defaultValue: value,
-														value: value,
-														onChange: function onChange(e) {
-																dispatch({
-																		type: 'PATCH',
-																		value: e.target.value,
-																		valueType: typeof value === 'undefined' ? 'undefined' : _typeof(value),
-																		path: path
-																});
-														}
+												Object.keys(value).map(function (key) {
+														return _react2.default.createElement(
+																'dl',
+																{ key: key },
+																_react2.default.createElement(
+																		'dt',
+																		null,
+																		key,
+																		' '
+																),
+																_react2.default.createElement(
+																		'dd',
+																		null,
+																		_react2.default.createElement(JsonValue, {
+																				dispatch: dispatch,
+																				path: [].concat(_toConsumableArray(path), [key]),
+																				value: value[key],
+																				schema: schema[key]
+																		})
+																)
+														);
 												})
 										);
-								case 'boolean':
-										return _react2.default.createElement(
-												'select',
-												{ defaultValue: value, onChange: function onChange(e) {
-																dispatch({
-																		type: 'PATCH',
-																		value: e.target.value,
-																		valueType: 'boolean',
-																		path: path
-																});
-														} },
-												_react2.default.createElement(
-														'option',
-														{ value: true },
-														'true'
-												),
-												_react2.default.createElement(
-														'option',
-														{ value: false },
-														'false'
-												)
-										);
-								case 'object':
-										if (Array.isArray(value)) {
-												return _react2.default.createElement(
-														'table',
-														null,
-														value.map(function (el, i) {
-																return _react2.default.createElement(
-																		'tr',
-																		{ key: i },
-																		_react2.default.createElement(
-																				'td',
-																				null,
-																				i
-																		),
-																		_react2.default.createElement(
-																				'td',
-																				null,
-																				_react2.default.createElement(JsonValue, {
-																						dispatch: dispatch,
-																						path: [].concat(_toConsumableArray(path), [i]),
-																						value: value[i]
-																				})
-																		)
-																);
-														})
-												);
-										} else {
+								}
+						} else {
+								switch (schema) {
+										case 'string':
+										case 'number':
 												return _react2.default.createElement(
 														'div',
 														null,
-														Object.keys(value).map(function (key) {
-																return _react2.default.createElement(
-																		'dl',
-																		{ key: key },
-																		_react2.default.createElement(
-																				'dt',
-																				null,
-																				key
-																		),
-																		_react2.default.createElement(
-																				'dd',
-																				null,
-																				_react2.default.createElement(JsonValue, {
-																						dispatch: dispatch,
-																						path: [].concat(_toConsumableArray(path), [key]),
-																						value: value[key]
-																				})
-																		)
-																);
+														_react2.default.createElement('input', {
+																type: 'text',
+																value: value,
+																onChange: function onChange(e) {
+																		dispatch({
+																				type: 'PATCH',
+																				value: e.target.value,
+																				path: path
+																		});
+																}
 														})
 												);
-										}
-								default:
-										return _react2.default.createElement('span', null);
+										case 'boolean':
+												return _react2.default.createElement(
+														'select',
+														{ value: value, onChange: function onChange(e) {
+																		dispatch({
+																				type: 'PATCH',
+																				value: e.target.value,
+																				path: path
+																		});
+																} },
+														_react2.default.createElement(
+																'option',
+																{ value: 'true' },
+																'true'
+														),
+														_react2.default.createElement(
+																'option',
+																{ value: 'false' },
+																'false'
+														)
+												);
+										default:
+												return _react2.default.createElement(
+														'div',
+														null,
+														schema
+												);
+								}
 						}
 				}
 		}]);
@@ -159,6 +167,7 @@ var JsonComponent = function (_React$Component2) {
 				value: function render() {
 						var _props2 = this.props;
 						var object = _props2.object;
+						var schema = _props2.schema;
 						var dispatch = _props2.dispatch;
 
 						return _react2.default.createElement(
@@ -171,6 +180,11 @@ var JsonComponent = function (_React$Component2) {
 												'pre',
 												null,
 												JSON.stringify(object, null, 2)
+										),
+										_react2.default.createElement(
+												'pre',
+												null,
+												JSON.stringify(schema, null, 2)
 										)
 								),
 								Object.keys(object).map(function (key) {
@@ -188,7 +202,8 @@ var JsonComponent = function (_React$Component2) {
 														_react2.default.createElement(JsonValue, {
 																dispatch: dispatch,
 																path: [key],
-																value: object[key]
+																value: object[key],
+																schema: schema[key]
 														})
 												)
 										);
@@ -35639,28 +35654,44 @@ var initialObject = {
   }
 };
 
-function cast(value, type) {
-  if (!type) return value;
-  switch (type) {
-    case 'boolean':
-      {
-        if ('string' === typeof value) {
-          return 'true' === value;
-        } else {
-          return !!value;
-        }
-      }
-    default:
-      return value;
+var initialSchema = {
+  tigo1: {
+    imei: 'string'
+  },
+  vodacom1: {
+    imei: 'string',
+    afsdf: [{ b: 'string' }, 'boolean', 'boolean', 'number']
+  },
+  abc: {
+    def: {
+      ghi: {},
+      x: 'number'
+    }
   }
-}
+};
 
-function patchedObject(data, path, value, valueType) {
-  var match = arguments.length <= 4 || arguments[4] === undefined ? true : arguments[4];
+//function cast(value, type) {
+//  if (!type)
+//    return value
+//  switch (type) {
+//    case 'boolean': {
+//      if ('string' === typeof value) {
+//	return ('true' === value)
+//      } else {
+//	return !!value
+//      }
+//    }
+//    default:
+//      return value
+//  }
+//}
+
+function patchedObject(data, path, value) {
+  var match = arguments.length <= 3 || arguments[3] === undefined ? true : arguments[3];
 
   var it = function it(key, val) {
     var match_ = match && key == path[0];
-    return 1 === path.length && match_ ? cast(value, valueType) : patchedObject(val, path.slice(1), value, valueType, match_);
+    return 1 === path.length && match_ ? value : patchedObject(val, path.slice(1), value, match_);
   };
   switch (typeof data === 'undefined' ? 'undefined' : _typeof(data)) {
     case 'object':
@@ -35683,14 +35714,25 @@ function object() {
 
   switch (action.type) {
     case 'PATCH':
-      return patchedObject(state, action.path, action.value, action.valueType);
+      return patchedObject(state, action.path, action.value);
+    default:
+      return state;
+  }
+}
+
+function schema() {
+  var state = arguments.length <= 0 || arguments[0] === undefined ? initialSchema : arguments[0];
+  var action = arguments[1];
+
+  switch (action.type) {
     default:
       return state;
   }
 }
 
 exports.default = (0, _redux.combineReducers)({
-  object: object
+  object: object,
+  schema: schema
 });
 
 },{"lodash":4,"redux":178}]},{},[2]);
