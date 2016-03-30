@@ -4,13 +4,15 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
-    "babel-preset-stage-0": "^6.5.0",
     "babel-preset-es2015": "^6.6.0",
     "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-0": "^6.5.0",
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
+    "react": "^0.14.7",
     "react-dom": "^0.14.7",
-    "react": "^0.14.7"
+    "react-redux": "^4.4.1",
+    "redux": "^3.3.1"
   },
   "devDependencies": {},
   "scripts": {
@@ -18,9 +20,11 @@
     "build": "browserify main.js -o public/bundle.js"
   },
   "browserify": {
-      "transform": [
-        ["babelify"]
+    "transform": [
+      [
+        "babelify"
       ]
+    ]
   },
   "author": "",
   "license": "ISC"
