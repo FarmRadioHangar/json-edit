@@ -33,22 +33,6 @@ const initialSchema = {
   },
 }
 
-//function cast(value, type) {
-//  if (!type)
-//    return value
-//  switch (type) {
-//    case 'boolean': {
-//      if ('string' === typeof value) {
-//	return ('true' === value)
-//      } else {
-//	return !!value
-//      }
-//    }
-//    default:
-//      return value
-//  }
-//}
-
 function patchedObject(data, path, value, match = true) {
   const it = (key, val) => {
     const match_ = match && key == path[0]
