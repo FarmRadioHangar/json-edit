@@ -23,19 +23,14 @@ class JsonValue extends React.Component {
 		})
 	      }}
 	    />
-	    {/*
-	    <div>
-	      value : {value}
-	    </div>
-	    */}
 	  </div>
         )
       case 'boolean':
 	return (
 	  <select defaultValue={value} onChange={e => {
 	      dispatch({
-                type  : 'PATCH', 
-                value : e.target.value, 
+                type      : 'PATCH', 
+                value     : e.target.value, 
 		valueType : 'boolean',
                 path,
 	      })
@@ -117,6 +112,4 @@ class JsonComponent extends React.Component {
   }
 }
 
-const Component = connect(state => state)(JsonComponent)
-
-export default Component
+export default connect(state => state)(JsonComponent)
