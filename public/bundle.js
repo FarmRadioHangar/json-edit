@@ -56,6 +56,7 @@ var JsonValue = function (_React$Component) {
 																dispatch({
 																		type: 'PATCH',
 																		value: e.target.value,
+																		valueType: typeof value === 'undefined' ? 'undefined' : _typeof(value),
 																		path: path
 																});
 														}
@@ -199,11 +200,9 @@ var JsonComponent = function (_React$Component2) {
 		return JsonComponent;
 }(_react2.default.Component);
 
-var Component = (0, _reactRedux.connect)(function (state) {
+exports.default = (0, _reactRedux.connect)(function (state) {
 		return state;
 })(JsonComponent);
-
-exports.default = Component;
 
 },{"react":172,"react-redux":8}],2:[function(require,module,exports){
 'use strict';

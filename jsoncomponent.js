@@ -17,8 +17,9 @@ class JsonValue extends React.Component {
 	      value        = {value}
 	      onChange     = {e => {
 	        dispatch({
-		  type  : 'PATCH', 
-		  value : e.target.value, 
+		  type      : 'PATCH', 
+		  value     : e.target.value, 
+		  valueType : typeof value,
 		  path,
 		})
 	      }}
