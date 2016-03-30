@@ -231,8 +231,6 @@ var _reactRedux = require('react-redux');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var store = (0, _redux.createStore)(_reducers2.default);
-//import JsonObject from './jsonobject'
-
 
 _reactDom2.default.render(_react2.default.createElement(
   _reactRedux.Provider,
