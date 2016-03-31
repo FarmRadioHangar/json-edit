@@ -114,7 +114,6 @@ var Item = function (_React$Component) {
     key: 'validate',
     value: function validate(e) {
       var value = e.target.value;
-      console.log(this.props.schema);
       if ('number' === this.props.schema) {
         var errors = '';
         if (isNaN(value)) {
@@ -438,8 +437,8 @@ store.dispatch((0, _actions.init)({
     imei: 'texttexttext'
   },
   vodacom1: {
-    imei: '1301312355555555278319237',
-    number: '255713231',
+    imei: 1301312355555555278319237,
+    number: 255713231,
     afsdf: [{ b: 'hello' }, false, false, NaN]
   },
   abc: {
