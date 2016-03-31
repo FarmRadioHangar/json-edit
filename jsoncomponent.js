@@ -11,21 +11,21 @@ class JsonValue extends React.Component {
     if ('object' === typeof value) {
       if (Array.isArray(value)) {
 	return (
-	  <table>
+	  <span>
 	    {value.map((el, i) => (
-  	      <tr key={i}>
-  	        <td>{i}</td>
-  	        <td>
+	      <dl key={i}>
+  	        <dt>{i}</dt>
+  	        <dd>
 	          <JsonValue 
-		    dispatch = {dispatch} 
-		    path     = {[...path, i]} 
-		    value    = {value[i]} 
-		    schema   = {schema[i]}
-		  />
-		</td>
-  	      </tr>
+	            dispatch = {dispatch} 
+	            path     = {[...path, i]} 
+	            value    = {value[i]} 
+	            schema   = {schema[i]}
+	          />
+  	        </dd>
+	      </dl>
 	    ))}
-	  </table>
+	  </span>
 	)
       } else {
         return (
@@ -64,7 +64,7 @@ class JsonValue extends React.Component {
 	            path,
 	          })
 	        }}
-	      />
+	      /> [{schema}]
 	    </div>
 	  )
 	case 'boolean':
@@ -87,14 +87,6 @@ class JsonComponent extends React.Component {
     const { object, schema, dispatch } = this.props
     return (
       <div>
-        <div>
-	  <pre>
-	    {JSON.stringify(object, null, 2)}
-	  </pre>
-	  <pre>
-	    {JSON.stringify(schema, null, 2)}
-	  </pre>
-        </div>
 	{Object.keys(object).map(key => (
           <dl key={key}>
             <dt>

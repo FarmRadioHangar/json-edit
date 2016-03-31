@@ -68,19 +68,19 @@ var JsonValue = function (_React$Component) {
 						if ('object' === (typeof value === 'undefined' ? 'undefined' : _typeof(value))) {
 								if (Array.isArray(value)) {
 										return _react2.default.createElement(
-												'table',
+												'span',
 												null,
 												value.map(function (el, i) {
 														return _react2.default.createElement(
-																'tr',
+																'dl',
 																{ key: i },
 																_react2.default.createElement(
-																		'td',
+																		'dt',
 																		null,
 																		i
 																),
 																_react2.default.createElement(
-																		'td',
+																		'dd',
 																		null,
 																		_react2.default.createElement(JsonValue, {
 																				dispatch: dispatch,
@@ -136,7 +136,10 @@ var JsonValue = function (_React$Component) {
 																				path: path
 																		});
 																}
-														})
+														}),
+														' [',
+														schema,
+														']'
 												);
 										case 'boolean':
 												return _react2.default.createElement(
@@ -190,20 +193,6 @@ var JsonComponent = function (_React$Component2) {
 						return _react2.default.createElement(
 								'div',
 								null,
-								_react2.default.createElement(
-										'div',
-										null,
-										_react2.default.createElement(
-												'pre',
-												null,
-												JSON.stringify(object, null, 2)
-										),
-										_react2.default.createElement(
-												'pre',
-												null,
-												JSON.stringify(schema, null, 2)
-										)
-								),
 								Object.keys(object).map(function (key) {
 										return _react2.default.createElement(
 												'dl',
