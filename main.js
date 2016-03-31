@@ -17,7 +17,8 @@ store.dispatch(init({
     imei: 'texttexttext',
   },
   vodacom1: {
-    imei: '1301312355555555278319237',
+    imei: 1301312355555555278319237,
+    number: 255713231,
     afsdf: [{b: 'hello'}, false, false, NaN],
   },
   abc: {
@@ -26,6 +27,7 @@ store.dispatch(init({
       x: 123123123,
     },
   },
+  void: null,
 }))
 
 ReactDOM.render(

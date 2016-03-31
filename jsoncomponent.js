@@ -26,7 +26,7 @@ const styles = {
 }
 
 function isEmpty(value) {
-  if ('object' !== typeof value)
+  if ('object' !== typeof value || !value)
     return false
   return (Array.isArray(value) && !value.length) || !Object.keys(value).length
 }
@@ -41,6 +41,7 @@ class Item extends React.Component {
     this.state = {
       expanded : 1 === props.path.length,
       edit     : false,
+      errors   : '',
     }
   }
   toggleExpanded() {
@@ -54,6 +55,16 @@ class Item extends React.Component {
     this.setState({
       edit : !edit,
     })
+  }
+  validate(e) {
+    const value = e.target.value
+    if ('number' === this.props.schema) {
+      let errors = ''
+      if (isNaN(value)) {
+	errors = 'Not a valid number.'
+      }
+      this.setState({errors})
+    }
   }
   renderComponent() {
     const { value, schema, dispatch, path } = this.props
@@ -78,6 +89,7 @@ class Item extends React.Component {
     } = this.props
     const { 
       edit,
+      errors,
       expanded, 
     } = this.state
     const indent = `${indentation}px`
@@ -96,10 +108,14 @@ class Item extends React.Component {
           <div>
 	    {/* Nested component */}
             <div style={styles.layout.row}>
-	      <div style={{width: indent}}>{!empty && arrow}</div>
-	      <div>{label && `${label}: `}{expanded ? lb : empty ? lb+rb+delimiter : `${lb}...${rb}${delimiter}`}</div>
+	      <div style={{width: indent}}>{!empty && value && arrow}</div>
+	      {value ? (
+	        <div>{label && `${label}: `}{expanded ? lb : empty ? lb+rb+delimiter : `${lb}...${rb}${delimiter}`}</div>
+	      ) : (
+	        <div>{label && `${label}: `}null{delimiter}</div>
+	      )}
 	    </div>
-	    {expanded && (
+	    {expanded && value && (
               <div>
 	        <div>{::this.renderComponent()}</div>
 		<div style={{marginLeft: indent}}>{rb}{delimiter}</div>
@@ -120,7 +136,11 @@ class Item extends React.Component {
                       type         = 'text' 
                       style        = {{...styles.text, border: '1px solid #ddd', padding: '0 3px'}}
                       defaultValue = {value}
+		      onChange     = {::this.validate}
                     /> 
+                  </div>
+	          <div>
+		    {errors}
                   </div>
                 </div>
                 <div style={{...styles.layout.row, marginTop: '5px'}}>

@@ -72,7 +72,7 @@ var styles = {
 };
 
 function isEmpty(value) {
-  if ('object' !== (typeof value === 'undefined' ? 'undefined' : _typeof(value))) return false;
+  if ('object' !== (typeof value === 'undefined' ? 'undefined' : _typeof(value)) || !value) return false;
   return Array.isArray(value) && !value.length || !Object.keys(value).length;
 }
 
@@ -86,7 +86,8 @@ var Item = function (_React$Component) {
 
     _this.state = {
       expanded: 1 === props.path.length,
-      edit: false
+      edit: false,
+      errors: ''
     };
     return _this;
   }
@@ -108,6 +109,19 @@ var Item = function (_React$Component) {
       this.setState({
         edit: !edit
       });
+    }
+  }, {
+    key: 'validate',
+    value: function validate(e) {
+      var value = e.target.value;
+      console.log(this.props.schema);
+      if ('number' === this.props.schema) {
+        var errors = '';
+        if (isNaN(value)) {
+          errors = 'Not a valid number.';
+        }
+        this.setState({ errors: errors });
+      }
     }
   }, {
     key: 'renderComponent',
@@ -140,6 +154,7 @@ var Item = function (_React$Component) {
       var value = _props2.value;
       var _state = this.state;
       var edit = _state.edit;
+      var errors = _state.errors;
       var expanded = _state.expanded;
 
       var indent = indentation + 'px';
@@ -177,16 +192,22 @@ var Item = function (_React$Component) {
             _react2.default.createElement(
               'div',
               { style: { width: indent } },
-              !empty && arrow
+              !empty && value && arrow
             ),
-            _react2.default.createElement(
+            value ? _react2.default.createElement(
               'div',
               null,
               label && label + ': ',
               expanded ? lb : empty ? lb + rb + delimiter : lb + '...' + rb + delimiter
+            ) : _react2.default.createElement(
+              'div',
+              null,
+              label && label + ': ',
+              'null',
+              delimiter
             )
           ),
-          expanded && _react2.default.createElement(
+          expanded && value && _react2.default.createElement(
             'div',
             null,
             _react2.default.createElement(
@@ -224,8 +245,14 @@ var Item = function (_React$Component) {
                   ref: 'input',
                   type: 'text',
                   style: _extends({}, styles.text, { border: '1px solid #ddd', padding: '0 3px' }),
-                  defaultValue: value
+                  defaultValue: value,
+                  onChange: this.validate.bind(this)
                 })
+              ),
+              _react2.default.createElement(
+                'div',
+                null,
+                errors
               )
             ),
             _react2.default.createElement(
@@ -412,6 +439,7 @@ store.dispatch((0, _actions.init)({
   },
   vodacom1: {
     imei: '1301312355555555278319237',
+    number: '255713231',
     afsdf: [{ b: 'hello' }, false, false, NaN]
   },
   abc: {
@@ -419,7 +447,8 @@ store.dispatch((0, _actions.init)({
       ghi: {},
       x: 123123123
     }
-  }
+  },
+  void: null
 }));
 
 _reactDom2.default.render(_react2.default.createElement(
