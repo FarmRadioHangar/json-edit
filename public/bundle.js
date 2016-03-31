@@ -123,34 +123,18 @@ var Item = function (_React$Component) {
       }
     }
   }, {
-    key: 'renderComponent',
-    value: function renderComponent() {
-      var _props = this.props;
-      var value = _props.value;
-      var schema = _props.schema;
-      var dispatch = _props.dispatch;
-      var path = _props.path;
-
-      return _react2.default.createElement(JsonValue, {
-        dispatch: dispatch,
-        path: path,
-        value: value,
-        schema: schema
-      });
-    }
-  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
 
-      var _props2 = this.props;
-      var delimiter = _props2.delimiter;
-      var dispatch = _props2.dispatch;
-      var indentation = _props2.indentation;
-      var label = _props2.label;
-      var path = _props2.path;
-      var schema = _props2.schema;
-      var value = _props2.value;
+      var _props = this.props;
+      var delimiter = _props.delimiter;
+      var dispatch = _props.dispatch;
+      var indentation = _props.indentation;
+      var label = _props.label;
+      var path = _props.path;
+      var schema = _props.schema;
+      var value = _props.value;
       var _state = this.state;
       var edit = _state.edit;
       var errors = _state.errors;
@@ -209,11 +193,7 @@ var Item = function (_React$Component) {
           expanded && value && _react2.default.createElement(
             'div',
             null,
-            _react2.default.createElement(
-              'div',
-              null,
-              this.renderComponent.call(this)
-            ),
+            _react2.default.createElement(JsonValue, this.props),
             _react2.default.createElement(
               'div',
               { style: { marginLeft: indent } },
@@ -315,11 +295,11 @@ var JsonValue = function (_React$Component2) {
   _createClass(JsonValue, [{
     key: 'render',
     value: function render() {
-      var _props3 = this.props;
-      var value = _props3.value;
-      var schema = _props3.schema;
-      var path = _props3.path;
-      var dispatch = _props3.dispatch;
+      var _props2 = this.props;
+      var value = _props2.value;
+      var schema = _props2.schema;
+      var path = _props2.path;
+      var dispatch = _props2.dispatch;
 
       if ('object' === (typeof value === 'undefined' ? 'undefined' : _typeof(value))) {
         if (Array.isArray(value)) {
@@ -374,10 +354,10 @@ var JsonComponent = function (_React$Component3) {
   _createClass(JsonComponent, [{
     key: 'render',
     value: function render() {
-      var _props4 = this.props;
-      var object = _props4.object;
-      var schema = _props4.schema;
-      var dispatch = _props4.dispatch;
+      var _props3 = this.props;
+      var object = _props3.object;
+      var schema = _props3.schema;
+      var dispatch = _props3.dispatch;
 
       return _react2.default.createElement(
         'div',

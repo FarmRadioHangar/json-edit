@@ -66,17 +66,6 @@ class Item extends React.Component {
       this.setState({errors})
     }
   }
-  renderComponent() {
-    const { value, schema, dispatch, path } = this.props
-    return (
-      <JsonValue 
-        dispatch       = {dispatch} 
-        path           = {path} 
-        value          = {value} 
-        schema         = {schema}
-      />
-    )
-  }
   render() {
     const { 
       delimiter, 
@@ -117,7 +106,7 @@ class Item extends React.Component {
 	    </div>
 	    {expanded && value && (
               <div>
-	        <div>{::this.renderComponent()}</div>
+	        <JsonValue {...this.props} />
 		<div style={{marginLeft: indent}}>{rb}{delimiter}</div>
 	      </div>
 	    )}
