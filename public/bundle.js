@@ -203,40 +203,48 @@ var Item = function (_React$Component) {
           )
         ) : _react2.default.createElement(
           'div',
-          { style: _extends({}, styles.layout.row, { height: '21px' }) },
+          { style: _extends({}, styles.layout.row, { height: edit ? '60px' : '21px' }) },
           _react2.default.createElement('div', { style: { width: indent } }),
           edit ? _react2.default.createElement(
             'div',
-            { style: styles.layout.row },
-            label && _react2.default.createElement(
-              'div',
-              null,
-              label,
-              ': '
-            ),
+            null,
             _react2.default.createElement(
               'div',
-              null,
-              _react2.default.createElement('input', {
-                ref: 'input',
-                type: 'text',
-                style: _extends({}, styles.text, { border: '1px solid #ddd', padding: '0 3px' }),
-                defaultValue: value
-              })
+              { style: styles.layout.row },
+              label && _react2.default.createElement(
+                'div',
+                null,
+                label,
+                ': '
+              ),
+              _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement('input', {
+                  ref: 'input',
+                  type: 'text',
+                  style: _extends({}, styles.text, { border: '1px solid #ddd', padding: '0 3px' }),
+                  defaultValue: value
+                })
+              )
             ),
             _react2.default.createElement(
-              'button',
-              { style: { marginLeft: '5px' }, onClick: function onClick() {
-                  dispatch((0, _actions.patch)(path, _this2.refs.input.value));_this2.toggleEdit();
-                } },
-              'Save'
-            ),
-            _react2.default.createElement(
-              'button',
-              { style: { marginLeft: '5px' }, onClick: function onClick() {
-                  return _this2.toggleEdit();
-                } },
-              'Cancel'
+              'div',
+              { style: _extends({}, styles.layout.row, { marginTop: '5px' }) },
+              _react2.default.createElement(
+                'button',
+                { onClick: function onClick() {
+                    dispatch((0, _actions.patch)(path, _this2.refs.input.value));_this2.toggleEdit();
+                  } },
+                'Save'
+              ),
+              _react2.default.createElement(
+                'button',
+                { style: { marginLeft: '5px' }, onClick: function onClick() {
+                    return _this2.toggleEdit();
+                  } },
+                'Cancel'
+              )
             )
           ) : _react2.default.createElement(
             'div',

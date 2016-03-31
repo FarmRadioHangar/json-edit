@@ -107,25 +107,29 @@ class Item extends React.Component {
 	    )}
           </div>
         ) : (
-          <div style={{...styles.layout.row, height: '21px'}}>
+          <div style={{...styles.layout.row, height: edit ? '60px' : '21px'}}>
 	    {/* Field-type component */}
 	    <div style={{width: indent}} />
 	    {edit ? (
-              <div style={styles.layout.row}>
-	        {label && <div>{label}:&nbsp;</div>}
-	        <div>
-                  <input 
-        	    ref          = 'input'
-                    type         = 'text' 
-                    style        = {{...styles.text, border: '1px solid #ddd', padding: '0 3px'}}
-                    defaultValue = {value}
-                  /> 
+	      <div>
+                <div style={styles.layout.row}>
+	          {label && <div>{label}:&nbsp;</div>}
+	          <div>
+                    <input 
+                      ref          = 'input'
+                      type         = 'text' 
+                      style        = {{...styles.text, border: '1px solid #ddd', padding: '0 3px'}}
+                      defaultValue = {value}
+                    /> 
+                  </div>
                 </div>
-                <button style={{marginLeft: '5px'}} onClick={() => {
-		  dispatch(patch(path, this.refs.input.value)); this.toggleEdit()}
-		}>Save</button>
-                <button style={{marginLeft: '5px'}} onClick={() => this.toggleEdit()}>Cancel</button>
-              </div>
+                <div style={{...styles.layout.row, marginTop: '5px'}}>
+                  <button onClick={() => {
+	            dispatch(patch(path, this.refs.input.value)); this.toggleEdit()}
+	          }>Save</button>
+                  <button style={{marginLeft: '5px'}} onClick={() => this.toggleEdit()}>Cancel</button>
+                </div>
+	      </div>
 	    ) : (
               <div>{label && <span>{label}:&nbsp;</span>}
 	        <a href='#' onClick={() => 'boolean' === schema ? dispatch(patch(path, !JSON.parse(value))) : this.toggleEdit()}>
