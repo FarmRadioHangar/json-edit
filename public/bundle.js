@@ -25,9 +25,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _react = require('react');
 
@@ -48,18 +52,29 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var styles = {
-  item: {
-    object: {
-      padding: '10px',
-      border: '1px solid #ddd',
-      marginLeft: '30px'
-    },
-    field: {
+  layout: {
+    row: {
       display: 'flex',
-      flexDirection: 'row'
+      flexDirection: 'row',
+      alignItems: 'center'
     }
+  },
+  text: {
+    fontFamily: 'monospace',
+    fontSize: '12px',
+    lineHeight: '20px'
+  },
+  arrow: {
+    color: '#999',
+    marginLeft: '1px',
+    cursor: 'pointer'
   }
 };
+
+function isEmpty(value) {
+  if ('object' !== (typeof value === 'undefined' ? 'undefined' : _typeof(value))) return false;
+  return Array.isArray(value) && !value.length || !Object.keys(value).length;
+}
 
 var Item = function (_React$Component) {
   _inherits(Item, _React$Component);
@@ -70,7 +85,8 @@ var Item = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Item).call(this, props));
 
     _this.state = {
-      expanded: 1 === props.path.length
+      expanded: 1 === props.path.length,
+      edit: false
     };
     return _this;
   }
@@ -82,6 +98,15 @@ var Item = function (_React$Component) {
 
       this.setState({
         expanded: !expanded
+      });
+    }
+  }, {
+    key: 'toggleEdit',
+    value: function toggleEdit() {
+      var edit = this.state.edit;
+
+      this.setState({
+        edit: !edit
       });
     }
   }, {
@@ -103,15 +128,32 @@ var Item = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var _props2 = this.props;
+      var delimiter = _props2.delimiter;
+      var dispatch = _props2.dispatch;
+      var indentation = _props2.indentation;
       var label = _props2.label;
-      var value = _props2.value;
       var path = _props2.path;
-      var expanded = this.state.expanded;
+      var schema = _props2.schema;
+      var value = _props2.value;
+      var _state = this.state;
+      var edit = _state.edit;
+      var expanded = _state.expanded;
+
+      var indent = indentation + 'px';
+
+      var _ref = Array.isArray(value) ? ['[', ']'] : ['{', '}'];
+
+      var _ref2 = _slicedToArray(_ref, 2);
+
+      var lb = _ref2[0];
+      var rb = _ref2[1];
 
       var arrow = _react2.default.createElement(
-        'a',
-        { href: '#', style: { textDecoration: 'none' }, onClick: this.toggleExpanded.bind(this) },
+        'span',
+        { style: styles.arrow, onClick: this.toggleExpanded.bind(this) },
         expanded ? _react2.default.createElement(
           'span',
           null,
@@ -122,43 +164,97 @@ var Item = function (_React$Component) {
           '▶'
         )
       );
+      var empty = isEmpty(value);
       return _react2.default.createElement(
         'div',
-        { style: { marginBottom: '5px' } },
+        { style: 1 === path.length ? {} : { marginLeft: indent } },
         'object' === (typeof value === 'undefined' ? 'undefined' : _typeof(value)) ? _react2.default.createElement(
           'div',
           null,
           _react2.default.createElement(
             'div',
-            { style: { display: 'flex', flexDirection: 'row' } },
+            { style: styles.layout.row },
             _react2.default.createElement(
               'div',
-              null,
-              label
+              { style: { width: indent } },
+              !empty && arrow
             ),
             _react2.default.createElement(
               'div',
-              { style: { marginLeft: '10px' } },
-              arrow
+              null,
+              label && label + ': ',
+              expanded ? lb : empty ? lb + rb + delimiter : lb + '...' + rb + delimiter
             )
           ),
           expanded && _react2.default.createElement(
             'div',
-            { style: styles.item.object },
-            this.renderComponent.call(this)
+            null,
+            _react2.default.createElement(
+              'div',
+              null,
+              this.renderComponent.call(this)
+            ),
+            _react2.default.createElement(
+              'div',
+              { style: { marginLeft: indent } },
+              rb,
+              delimiter
+            )
           )
         ) : _react2.default.createElement(
           'div',
-          { style: styles.item.field },
-          _react2.default.createElement(
+          { style: _extends({}, styles.layout.row, { height: '21px' }) },
+          _react2.default.createElement('div', { style: { width: indent } }),
+          edit ? _react2.default.createElement(
             'div',
-            { style: { minWidth: '60px' } },
-            label
-          ),
-          _react2.default.createElement(
+            { style: styles.layout.row },
+            label && _react2.default.createElement(
+              'div',
+              null,
+              label,
+              ': '
+            ),
+            _react2.default.createElement(
+              'div',
+              null,
+              _react2.default.createElement('input', {
+                ref: 'input',
+                type: 'text',
+                style: _extends({}, styles.text, { border: '1px solid #ddd', padding: '0 3px' }),
+                defaultValue: value
+              })
+            ),
+            _react2.default.createElement(
+              'button',
+              { style: { marginLeft: '5px' }, onClick: function onClick() {
+                  dispatch((0, _actions.patch)(path, _this2.refs.input.value));_this2.toggleEdit();
+                } },
+              'Save'
+            ),
+            _react2.default.createElement(
+              'button',
+              { style: { marginLeft: '5px' }, onClick: function onClick() {
+                  return _this2.toggleEdit();
+                } },
+              'Cancel'
+            )
+          ) : _react2.default.createElement(
             'div',
             null,
-            this.renderComponent.call(this)
+            label && _react2.default.createElement(
+              'span',
+              null,
+              label,
+              ': '
+            ),
+            _react2.default.createElement(
+              'a',
+              { href: '#', onClick: function onClick() {
+                  return 'boolean' === schema ? dispatch((0, _actions.patch)(path, !JSON.parse(value))) : _this2.toggleEdit();
+                } },
+              '' + value
+            ),
+            delimiter
           )
         )
       );
@@ -168,13 +264,18 @@ var Item = function (_React$Component) {
   return Item;
 }(_react2.default.Component);
 
+Item.defaultProps = {
+  indentation: 13,
+  delimiter: ''
+};
+
 var JsonValue = function (_React$Component2) {
   _inherits(JsonValue, _React$Component2);
 
-  function JsonValue() {
+  function JsonValue(props) {
     _classCallCheck(this, JsonValue);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(JsonValue).apply(this, arguments));
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(JsonValue).call(this, props));
   }
 
   _createClass(JsonValue, [{
@@ -194,11 +295,11 @@ var JsonValue = function (_React$Component2) {
             value.map(function (el, i) {
               return _react2.default.createElement(Item, {
                 key: i,
-                label: i,
                 dispatch: dispatch,
                 path: [].concat(_toConsumableArray(path), [i]),
                 value: value[i],
-                schema: schema[i]
+                schema: schema[i],
+                delimiter: i === value.length - 1 ? '' : ','
               });
             })
           );
@@ -219,40 +320,7 @@ var JsonValue = function (_React$Component2) {
           );
         }
       } else {
-        switch (schema) {
-          case 'string':
-          case 'number':
-            return _react2.default.createElement('input', {
-              type: 'text',
-              value: value,
-              onChange: function onChange(e) {
-                dispatch({
-                  type: 'PATCH',
-                  value: e.target.value,
-                  path: path
-                });
-              }
-            });
-          case 'boolean':
-            return _react2.default.createElement(
-              'select',
-              { value: value, onChange: function onChange(e) {
-                  dispatch((0, _actions.patch)(path, e.target.value));
-                } },
-              _react2.default.createElement(
-                'option',
-                { value: 'true' },
-                'true'
-              ),
-              _react2.default.createElement(
-                'option',
-                { value: 'false' },
-                'false'
-              )
-            );
-          default:
-            return _react2.default.createElement('span', null);
-        }
+        return _react2.default.createElement('span', null);
       }
     }
   }]);
@@ -279,7 +347,7 @@ var JsonComponent = function (_React$Component3) {
 
       return _react2.default.createElement(
         'div',
-        null,
+        { style: styles.text },
         Object.keys(object).map(function (key) {
           return _react2.default.createElement(Item, {
             key: key,
