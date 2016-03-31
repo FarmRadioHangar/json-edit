@@ -22,7 +22,7 @@ function init(data) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-		value: true
+  value: true
 });
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -47,182 +47,258 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var JsonValue = function (_React$Component) {
-		_inherits(JsonValue, _React$Component);
+var styles = {
+  item: {
+    object: {
+      padding: '10px',
+      border: '1px solid #ddd',
+      marginLeft: '30px'
+    },
+    field: {
+      display: 'flex',
+      flexDirection: 'row'
+    }
+  }
+};
 
-		function JsonValue() {
-				_classCallCheck(this, JsonValue);
+var Item = function (_React$Component) {
+  _inherits(Item, _React$Component);
 
-				return _possibleConstructorReturn(this, Object.getPrototypeOf(JsonValue).apply(this, arguments));
-		}
+  function Item(props) {
+    _classCallCheck(this, Item);
 
-		_createClass(JsonValue, [{
-				key: 'render',
-				value: function render() {
-						var _props = this.props;
-						var value = _props.value;
-						var schema = _props.schema;
-						var path = _props.path;
-						var dispatch = _props.dispatch;
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Item).call(this, props));
 
-						if ('object' === (typeof value === 'undefined' ? 'undefined' : _typeof(value))) {
-								if (Array.isArray(value)) {
-										return _react2.default.createElement(
-												'span',
-												null,
-												value.map(function (el, i) {
-														return _react2.default.createElement(
-																'dl',
-																{ key: i },
-																_react2.default.createElement(
-																		'dt',
-																		null,
-																		i
-																),
-																_react2.default.createElement(
-																		'dd',
-																		null,
-																		_react2.default.createElement(JsonValue, {
-																				dispatch: dispatch,
-																				path: [].concat(_toConsumableArray(path), [i]),
-																				value: value[i],
-																				schema: schema[i]
-																		})
-																)
-														);
-												})
-										);
-								} else {
-										return _react2.default.createElement(
-												'div',
-												null,
-												Object.keys(value).map(function (key) {
-														return _react2.default.createElement(
-																'dl',
-																{ key: key },
-																_react2.default.createElement(
-																		'dt',
-																		null,
-																		key
-																),
-																_react2.default.createElement(
-																		'dd',
-																		null,
-																		_react2.default.createElement(JsonValue, {
-																				dispatch: dispatch,
-																				path: [].concat(_toConsumableArray(path), [key]),
-																				value: value[key],
-																				schema: schema[key]
-																		})
-																)
-														);
-												})
-										);
-								}
-						} else {
-								switch (schema) {
-										case 'string':
-										case 'number':
-												return _react2.default.createElement(
-														'div',
-														null,
-														_react2.default.createElement('input', {
-																type: 'text',
-																value: value,
-																onChange: function onChange(e) {
-																		dispatch({
-																				type: 'PATCH',
-																				value: e.target.value,
-																				path: path
-																		});
-																}
-														}),
-														' [',
-														schema,
-														']'
-												);
-										case 'boolean':
-												return _react2.default.createElement(
-														'select',
-														{ value: value, onChange: function onChange(e) {
-																		dispatch((0, _actions.patch)(path, e.target.value));
-																} },
-														' ',
-														_react2.default.createElement(
-																'option',
-																{ value: 'true' },
-																'true'
-														),
-														_react2.default.createElement(
-																'option',
-																{ value: 'false' },
-																'false'
-														)
-												);
-										default:
-												return _react2.default.createElement(
-														'div',
-														null,
-														schema
-												);
-								}
-						}
-				}
-		}]);
+    _this.state = {
+      expanded: 1 === props.path.length
+    };
+    return _this;
+  }
 
-		return JsonValue;
+  _createClass(Item, [{
+    key: 'toggleExpanded',
+    value: function toggleExpanded() {
+      var expanded = this.state.expanded;
+
+      this.setState({
+        expanded: !expanded
+      });
+    }
+  }, {
+    key: 'renderComponent',
+    value: function renderComponent() {
+      var _props = this.props;
+      var value = _props.value;
+      var schema = _props.schema;
+      var dispatch = _props.dispatch;
+      var path = _props.path;
+
+      return _react2.default.createElement(JsonValue, {
+        dispatch: dispatch,
+        path: path,
+        value: value,
+        schema: schema
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props2 = this.props;
+      var label = _props2.label;
+      var value = _props2.value;
+      var path = _props2.path;
+      var expanded = this.state.expanded;
+
+      var arrow = _react2.default.createElement(
+        'a',
+        { href: '#', style: { textDecoration: 'none' }, onClick: this.toggleExpanded.bind(this) },
+        expanded ? _react2.default.createElement(
+          'span',
+          null,
+          '▼'
+        ) : _react2.default.createElement(
+          'span',
+          null,
+          '▶'
+        )
+      );
+      return _react2.default.createElement(
+        'div',
+        { style: { marginBottom: '5px' } },
+        'object' === (typeof value === 'undefined' ? 'undefined' : _typeof(value)) ? _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'div',
+            { style: { display: 'flex', flexDirection: 'row' } },
+            _react2.default.createElement(
+              'div',
+              null,
+              label
+            ),
+            _react2.default.createElement(
+              'div',
+              { style: { marginLeft: '10px' } },
+              arrow
+            )
+          ),
+          expanded && _react2.default.createElement(
+            'div',
+            { style: styles.item.object },
+            this.renderComponent.call(this)
+          )
+        ) : _react2.default.createElement(
+          'div',
+          { style: styles.item.field },
+          _react2.default.createElement(
+            'div',
+            { style: { minWidth: '60px' } },
+            label
+          ),
+          _react2.default.createElement(
+            'div',
+            null,
+            this.renderComponent.call(this)
+          )
+        )
+      );
+    }
+  }]);
+
+  return Item;
 }(_react2.default.Component);
 
-var JsonComponent = function (_React$Component2) {
-		_inherits(JsonComponent, _React$Component2);
+var JsonValue = function (_React$Component2) {
+  _inherits(JsonValue, _React$Component2);
 
-		function JsonComponent() {
-				_classCallCheck(this, JsonComponent);
+  function JsonValue() {
+    _classCallCheck(this, JsonValue);
 
-				return _possibleConstructorReturn(this, Object.getPrototypeOf(JsonComponent).apply(this, arguments));
-		}
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(JsonValue).apply(this, arguments));
+  }
 
-		_createClass(JsonComponent, [{
-				key: 'render',
-				value: function render() {
-						var _props2 = this.props;
-						var object = _props2.object;
-						var schema = _props2.schema;
-						var dispatch = _props2.dispatch;
+  _createClass(JsonValue, [{
+    key: 'render',
+    value: function render() {
+      var _props3 = this.props;
+      var value = _props3.value;
+      var schema = _props3.schema;
+      var path = _props3.path;
+      var dispatch = _props3.dispatch;
 
-						return _react2.default.createElement(
-								'div',
-								null,
-								Object.keys(object).map(function (key) {
-										return _react2.default.createElement(
-												'dl',
-												{ key: key },
-												_react2.default.createElement(
-														'dt',
-														null,
-														key
-												),
-												_react2.default.createElement(
-														'dd',
-														null,
-														_react2.default.createElement(JsonValue, {
-																dispatch: dispatch,
-																path: [key],
-																value: object[key],
-																schema: schema[key]
-														})
-												)
-										);
-								})
-						);
-				}
-		}]);
+      if ('object' === (typeof value === 'undefined' ? 'undefined' : _typeof(value))) {
+        if (Array.isArray(value)) {
+          return _react2.default.createElement(
+            'div',
+            null,
+            value.map(function (el, i) {
+              return _react2.default.createElement(Item, {
+                key: i,
+                label: i,
+                dispatch: dispatch,
+                path: [].concat(_toConsumableArray(path), [i]),
+                value: value[i],
+                schema: schema[i]
+              });
+            })
+          );
+        } else {
+          return _react2.default.createElement(
+            'div',
+            null,
+            Object.keys(value).map(function (key) {
+              return _react2.default.createElement(Item, {
+                key: key,
+                label: key,
+                dispatch: dispatch,
+                path: [].concat(_toConsumableArray(path), [key]),
+                value: value[key],
+                schema: schema[key]
+              });
+            })
+          );
+        }
+      } else {
+        switch (schema) {
+          case 'string':
+          case 'number':
+            return _react2.default.createElement('input', {
+              type: 'text',
+              value: value,
+              onChange: function onChange(e) {
+                dispatch({
+                  type: 'PATCH',
+                  value: e.target.value,
+                  path: path
+                });
+              }
+            });
+          case 'boolean':
+            return _react2.default.createElement(
+              'select',
+              { value: value, onChange: function onChange(e) {
+                  dispatch((0, _actions.patch)(path, e.target.value));
+                } },
+              _react2.default.createElement(
+                'option',
+                { value: 'true' },
+                'true'
+              ),
+              _react2.default.createElement(
+                'option',
+                { value: 'false' },
+                'false'
+              )
+            );
+          default:
+            return _react2.default.createElement('span', null);
+        }
+      }
+    }
+  }]);
 
-		return JsonComponent;
+  return JsonValue;
+}(_react2.default.Component);
+
+var JsonComponent = function (_React$Component3) {
+  _inherits(JsonComponent, _React$Component3);
+
+  function JsonComponent() {
+    _classCallCheck(this, JsonComponent);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(JsonComponent).apply(this, arguments));
+  }
+
+  _createClass(JsonComponent, [{
+    key: 'render',
+    value: function render() {
+      var _props4 = this.props;
+      var object = _props4.object;
+      var schema = _props4.schema;
+      var dispatch = _props4.dispatch;
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        Object.keys(object).map(function (key) {
+          return _react2.default.createElement(Item, {
+            key: key,
+            label: key,
+            dispatch: dispatch,
+            path: [key],
+            value: object[key],
+            schema: schema[key]
+          });
+        })
+      );
+    }
+  }]);
+
+  return JsonComponent;
 }(_react2.default.Component);
 
 exports.default = (0, _reactRedux.connect)(function (state) {
-		return state;
+  return state;
 })(JsonComponent);
 
 },{"./actions":1,"react":173,"react-redux":9}],3:[function(require,module,exports){
