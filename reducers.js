@@ -1,38 +1,6 @@
 import { combineReducers } from 'redux'
 import _ from 'lodash'
 
-const initialObject = {
-  tigo1: {
-    imei: 'texttexttext',
-  },
-  vodacom1: {
-    imei: '1301312355555555278319237',
-    afsdf: [{b: 'hello'}, false, false, NaN],
-  },
-  abc: {
-    def: {
-      ghi: {},
-      x: 123123123,
-    },
-  },
-}
-
-const initialSchema = {
-  tigo1: {
-    imei: 'string',
-  },
-  vodacom1: {
-    imei: 'string',
-    afsdf: [{b: 'string'}, 'boolean', 'boolean', 'number'],
-  },
-  abc: {
-    def: {
-      ghi: {},
-      x: 'number',
-    },
-  },
-}
-
 function patchedObject(data, path, value, match = true) {
   const it = (key, val) => {
     const match_ = match && key == path[0]
@@ -53,8 +21,20 @@ function patchedObject(data, path, value, match = true) {
   }
 }
 
-function object(state = initialObject, action) {
+function buildSchema(value) {
+  if ('object' !== typeof value) {
+    return (typeof value)
+  } else {
+    return Array.isArray(value) 
+	? value.map(el => buildSchema(el))
+	: _.mapValues(value, buildSchema)
+  }
+}
+
+function object(state = {}, action) {
   switch (action.type) {
+    case 'INIT':
+      return action.data
     case 'PATCH':
       return patchedObject(state, action.path, action.value)
     default:
@@ -62,8 +42,10 @@ function object(state = initialObject, action) {
   }
 }
 
-function schema(state = initialSchema, action) {
+function schema(state = {}, action) {
   switch (action.type) {
+    case 'INIT':
+      return buildSchema(action.data)
     default:
       return state
   }

@@ -2,6 +2,8 @@ import React from 'react'
 
 import { connect } 
   from 'react-redux'
+import { patch }
+  from './actions'
 
 class JsonValue extends React.Component {
   render() {
@@ -67,14 +69,7 @@ class JsonValue extends React.Component {
 	  )
 	case 'boolean':
 	  return (
-	    <select value={value} onChange={e => {
-	        dispatch({
-                  type  : 'PATCH', 
-                  value : e.target.value, 
-                  path,
-	        })
-	      }}>
-	      <option value='true'>true</option>
+	    <select value={value} onChange={e => { dispatch(patch(path, e.target.value)) }}> <option value='true'>true</option>
 	      <option value='false'>false</option>
 	    </select>
 	  )
