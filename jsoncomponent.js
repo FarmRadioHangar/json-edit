@@ -13,6 +13,12 @@ const styles = {
       alignItems    : 'center',
     },
   },
+  button: {
+    border          : '1px solid #999',
+    fontSize        : '11px', 
+    padding         : '2px 5px',
+    backgroundColor : '#fff',
+  },
   text: {
     fontFamily      : 'monospace', 
     fontSize        : '12px', 
@@ -54,7 +60,7 @@ class Item extends React.Component {
     if ('number' === this.props.schema) {
       let errors = ''
       if (isNaN(value)) {
-	errors = 'Not a valid number.'
+        errors = 'Not a valid number.'
       }
       this.setState({errors})
     }
@@ -78,7 +84,7 @@ class Item extends React.Component {
     const [ lb, rb ] = Array.isArray(value) ? ['[', ']'] : ['{', '}']
     const arrow = ( 
       <span style={styles.arrow} onClick={() => this.toggle('expanded')}>{expanded ? (
-	<span>&#9660;</span>
+        <span>&#9660;</span>
       ) : (
         <span>&#9654;</span>
       )}</span>
@@ -88,57 +94,57 @@ class Item extends React.Component {
       <div style={1 === path.length ? {} : {marginLeft: indent}}>
         {'object' === typeof value ? (
           <div>
-	    {/* Nested component */}
+            {/* Nested component */}
             <div style={styles.layout.row}>
-	      <div style={{width: indent}}>{!empty && value && arrow}</div>
-	      {value ? (
-	        <div>{label && `${label}: `}{expanded ? lb : empty ? lb+rb+delimiter : `${lb}...${rb}${delimiter}`}</div>
-	      ) : (
-	        <div>{label && `${label}: `}null{delimiter}</div>
-	      )}
-	    </div>
-	    {expanded && value && (
+              <div style={{width: indent}}>{!empty && value && arrow}</div>
+              {value ? (
+                <div>{label && `${label}: `}{expanded ? lb : empty ? lb+rb+delimiter : `${lb}...${rb}${delimiter}`}</div>
+              ) : (
+                <div>{label && `${label}: `}null{delimiter}</div>
+              )}
+            </div>
+            {expanded && value && (
               <div>
-	        <JsonValue {...this.props} />
-		<div style={{marginLeft: indent}}>{rb}{delimiter}</div>
-	      </div>
-	    )}
+                <JsonValue {...this.props} />
+                <div style={{marginLeft: indent}}>{rb}{delimiter}</div>
+              </div>
+            )}
           </div>
         ) : (
           <div style={{...styles.layout.row, height: edit ? '60px' : '21px'}}>
-	    {/* Field-type component */}
-	    <div style={{width: indent}} />
-	    {edit ? (
-	      <div>
+            {/* Field-type component */}
+            <div style={{width: indent}} />
+            {edit ? (
+              <div style={{borderLeft: '4px solid #ddd', paddingLeft: '10px'}}>
                 <div style={styles.layout.row}>
-	          {label && <div>{label}:&nbsp;</div>}
-	          <div>
+                  {label && <div>{label}:&nbsp;</div>}
+                  <div>
                     <input 
                       ref          = 'input'
                       type         = 'text' 
                       style        = {{...styles.text, border: '1px solid #ddd', padding: '0 3px'}}
                       defaultValue = {value}
-		      onChange     = {::this.validate}
+                      onChange     = {::this.validate}
                     /> 
                   </div>
-	          <div>
-		    {errors}
+                  <div>
+                    {errors}
                   </div>
                 </div>
                 <div style={{...styles.layout.row, marginTop: '5px'}}>
-                  <button onClick={() => {
-	            dispatch(patch(path, this.refs.input.value)); this.toggle('edit')}
-	          }>Save</button>
-                  <button style={{marginLeft: '5px'}} onClick={() => this.toggle('edit')}>Cancel</button>
+                  <button style={styles.button} onClick={() => {
+                    dispatch(patch(path, this.refs.input.value)); this.toggle('edit')}
+                  }>Save</button>
+                  <button style={{...styles.button, marginLeft: '5px'}} onClick={() => this.toggle('edit')}>Cancel</button>
                 </div>
-	      </div>
-	    ) : (
-              <div>{label && <span>{label}:&nbsp;</span>}
-	        <a href='#' onClick={() => 'boolean' === schema ? dispatch(patch(path, !JSON.parse(value))) : this.toggle('edit')}>
-		  {''+value}
-		</a>{delimiter}
               </div>
-	    )}
+            ) : (
+              <div>{label && <span>{label}:&nbsp;</span>}
+                <a href='#' onClick={() => 'boolean' === schema ? dispatch(patch(path, !JSON.parse(value))) : this.toggle('edit')}>
+                  {''+value}
+                </a>{delimiter}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -154,35 +160,35 @@ class JsonValue extends React.Component {
     const { value, schema, path, dispatch } = this.props
     if ('object' === typeof value) {
       if (Array.isArray(value)) {
-	return (
-	  <div>
-	    {value.map((el, i) => (
-	      <Item 
-	        key       = {i} 
-	        dispatch  = {dispatch} 
-	        path      = {[...path, i]} 
-	        value     = {value[i]} 
-	        schema    = {schema[i]} 
-		delimiter = {i === value.length-1 ? '' : ','}
-	      />
-	    ))}
-	  </div>
-	)
+        return (
+          <div>
+            {value.map((el, i) => (
+              <Item 
+                key       = {i} 
+                dispatch  = {dispatch} 
+                path      = {[...path, i]} 
+                value     = {value[i]} 
+                schema    = {schema[i]} 
+                delimiter = {i === value.length-1 ? '' : ','}
+              />
+            ))}
+          </div>
+        )
       } else {
         return (
-	  <div>
-    	    {Object.keys(value).map(key => (
-	      <Item 
-	        key      = {key} 
-		label    = {key}
-		dispatch = {dispatch} 
-		path     = {[...path, key]} 
-		value    = {value[key]} 
-		schema   = {schema[key]} 
-	      />
-	    ))}
-	  </div>
-	)
+          <div>
+            {Object.keys(value).map(key => (
+              <Item 
+                key      = {key} 
+                label    = {key}
+                dispatch = {dispatch} 
+                path     = {[...path, key]} 
+                value    = {value[key]} 
+                schema   = {schema[key]} 
+              />
+            ))}
+          </div>
+        )
       }
     } else {
       return <span />
@@ -195,16 +201,16 @@ class JsonComponent extends React.Component {
     const { object, schema, dispatch } = this.props
     return (
       <div style={styles.text}>
-	{Object.keys(object).map(key => (
-	  <Item 
-	    key      = {key} 
-	    label    = {key}
-	    dispatch = {dispatch} 
-	    path     = {[key]} 
-	    value    = {object[key]} 
-	    schema   = {schema[key]}
-	  />
-	))}
+        {Object.keys(object).map(key => (
+          <Item 
+            key      = {key} 
+            label    = {key}
+            dispatch = {dispatch} 
+            path     = {[key]} 
+            value    = {object[key]} 
+            schema   = {schema[key]}
+          />
+        ))}
       </div>
     )
   }

@@ -61,6 +61,12 @@ var styles = {
       alignItems: 'center'
     }
   },
+  button: {
+    border: '1px solid #999',
+    fontSize: '11px',
+    padding: '2px 5px',
+    backgroundColor: '#fff'
+  },
   text: {
     fontFamily: 'monospace',
     fontSize: '12px',
@@ -198,7 +204,7 @@ var Item = function (_React$Component) {
           _react2.default.createElement('div', { style: { width: indent } }),
           edit ? _react2.default.createElement(
             'div',
-            null,
+            { style: { borderLeft: '4px solid #ddd', paddingLeft: '10px' } },
             _react2.default.createElement(
               'div',
               { style: styles.layout.row },
@@ -230,14 +236,14 @@ var Item = function (_React$Component) {
               { style: _extends({}, styles.layout.row, { marginTop: '5px' }) },
               _react2.default.createElement(
                 'button',
-                { onClick: function onClick() {
+                { style: styles.button, onClick: function onClick() {
                     dispatch((0, _actions.patch)(path, _this2.refs.input.value));_this2.toggle('edit');
                   } },
                 'Save'
               ),
               _react2.default.createElement(
                 'button',
-                { style: { marginLeft: '5px' }, onClick: function onClick() {
+                { style: _extends({}, styles.button, { marginLeft: '5px' }), onClick: function onClick() {
                     return _this2.toggle('edit');
                   } },
                 'Cancel'
@@ -403,21 +409,23 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var store = (0, _redux.createStore)(_reducers2.default);
 
+// JSON example data borrowed from https://adobe.github.io/Spry/samples/data_region/JSONDataSetSample.html#Example3
 store.dispatch((0, _actions.init)({
-		"id": "0001",
-		"type": "donut",
-		"name": "Cake",
-		"ppu": 0.55,
-		"batters": {
-				"batter": [{ "id": "1001", "type": "Regular" }, { "id": "1002", "type": "Chocolate" }, { "id": "1003", "type": "Blueberry" }, { "id": "1004", "type": "Devil's Food" }]
-		},
-		"topping": [{ "id": "5001", "type": "None" }, { "id": "5002", "type": "Glazed" }, { "id": "5005", "type": "Sugar" }, { "id": "5007", "type": "Powdered Sugar" }, { "id": "5006", "type": "Chocolate with Sprinkles" }, { "id": "5003", "type": "Chocolate" }, { "id": "5004", "type": "Maple" }]
+  "id": "0001",
+  "void": null,
+  "type": "donut",
+  "name": "Cake",
+  "ppu": 0.55,
+  "batters": {
+    "batter": [{ "id": "1001", "type": "Regular" }, { "id": "1002", "type": "Chocolate" }, { "id": "1003", "type": "Blueberry" }, { "id": "1004", "type": "Devil's Food" }]
+  },
+  "topping": [{ "id": "5001", "type": "None" }, { "id": "5002", "type": "Glazed" }, { "id": "5005", "type": "Sugar" }, { "id": "5007", "type": "Powdered Sugar" }, { "id": "5006", "type": "Chocolate with Sprinkles" }, { "id": "5003", "type": "Chocolate" }, { "id": "5004", "type": "Maple" }]
 }));
 
 _reactDom2.default.render(_react2.default.createElement(
-		_reactRedux.Provider,
-		{ store: store },
-		_react2.default.createElement(_jsoncomponent2.default, null)
+  _reactRedux.Provider,
+  { store: store },
+  _react2.default.createElement(_jsoncomponent2.default, null)
 ), document.getElementById('main'));
 
 },{"./actions":1,"./jsoncomponent":2,"./reducers":184,"react":173,"react-dom":6,"react-redux":9,"redux":179}],4:[function(require,module,exports){
