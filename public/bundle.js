@@ -446,6 +446,21 @@ store.dispatch((0, _actions.init)({
   "topping": [{ "id": "5001", "type": "None", "active": true }, { "id": "5002", "type": "Glazed", "active": true }, { "id": "5005", "type": "Sugar", "active": true }, { "id": "5007", "type": "Powdered Sugar", "active": true }, { "id": "5006", "type": "Chocolate with Sprinkles", "active": true }, { "id": "5003", "type": "Chocolate", "active": true }, { "id": "5004", "type": "Maple", "active": true }]
 }));
 
+var styles = {
+  layout: {
+    row: {
+      display: 'flex',
+      flexDirection: 'row'
+    }
+  },
+  preview: {
+    flex: 1,
+    border: '1px solid #999',
+    backgroundColor: '#fafafa',
+    padding: '8px'
+  }
+};
+
 var App = function (_React$Component) {
   _inherits(App, _React$Component);
 
@@ -462,15 +477,15 @@ var App = function (_React$Component) {
 
       return _react2.default.createElement(
         'div',
-        { style: { display: 'flex', flexDirection: 'row' } },
+        { style: styles.layout.row },
         _react2.default.createElement(
           'div',
           { style: { flex: 1 } },
-          _react2.default.createElement(_jsontree2.default, { ref: 'tree' })
+          _react2.default.createElement(_jsontree2.default, null)
         ),
         _react2.default.createElement(
           'div',
-          { style: { flex: 1, border: '1px solid #999', backgroundColor: '#fafafa', padding: '8px' } },
+          { style: styles.preview },
           _react2.default.createElement(
             'pre',
             { style: { margin: 0 } },
