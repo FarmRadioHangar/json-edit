@@ -21,6 +21,7 @@ store.dispatch(init({
     number: 255713231,
     afsdf: [{b: 'hello'}, false, false, NaN],
   },
+  x: null,
   abc: {
     def: {
       ghi: {},

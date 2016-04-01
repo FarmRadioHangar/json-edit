@@ -5,11 +5,13 @@ function patchedObject(data, path, value, match = true) {
   const it = (key, val) => {
     const match_ = match && key == path[0]
     return (1 === path.length && match_) 
-  	? value
-  	: patchedObject(val, path.slice(1), value, match_)
+			? value
+			: patchedObject(val, path.slice(1), value, match_)
   }
   switch (typeof data) {
     case 'object':
+      if (null === data) 
+				return null
       return Array.isArray(data) 
 	      ? data.map((item, i) => it(i, item))
 	      : _.mapValues(data, (val, key) => it(key, val))
@@ -26,8 +28,8 @@ function buildSchema(value) {
     return (typeof value)
   } else {
     return Array.isArray(value) 
-	? value.map(el => buildSchema(el))
-	: _.mapValues(value, buildSchema)
+			? value.map(el => buildSchema(el))
+			: _.mapValues(value, buildSchema)
   }
 }
 

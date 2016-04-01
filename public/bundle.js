@@ -45,6 +45,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -93,22 +95,9 @@ var Item = function (_React$Component) {
   }
 
   _createClass(Item, [{
-    key: 'toggleExpanded',
-    value: function toggleExpanded() {
-      var expanded = this.state.expanded;
-
-      this.setState({
-        expanded: !expanded
-      });
-    }
-  }, {
-    key: 'toggleEdit',
-    value: function toggleEdit() {
-      var edit = this.state.edit;
-
-      this.setState({
-        edit: !edit
-      });
+    key: 'toggle',
+    value: function toggle(property) {
+      this.setState(_defineProperty({}, property, !this.state[property]));
     }
   }, {
     key: 'validate',
@@ -151,7 +140,9 @@ var Item = function (_React$Component) {
 
       var arrow = _react2.default.createElement(
         'span',
-        { style: styles.arrow, onClick: this.toggleExpanded.bind(this) },
+        { style: styles.arrow, onClick: function onClick() {
+            return _this2.toggle('expanded');
+          } },
         expanded ? _react2.default.createElement(
           'span',
           null,
@@ -240,14 +231,14 @@ var Item = function (_React$Component) {
               _react2.default.createElement(
                 'button',
                 { onClick: function onClick() {
-                    dispatch((0, _actions.patch)(path, _this2.refs.input.value));_this2.toggleEdit();
+                    dispatch((0, _actions.patch)(path, _this2.refs.input.value));_this2.toggle('edit');
                   } },
                 'Save'
               ),
               _react2.default.createElement(
                 'button',
                 { style: { marginLeft: '5px' }, onClick: function onClick() {
-                    return _this2.toggleEdit();
+                    return _this2.toggle('edit');
                   } },
                 'Cancel'
               )
@@ -264,7 +255,7 @@ var Item = function (_React$Component) {
             _react2.default.createElement(
               'a',
               { href: '#', onClick: function onClick() {
-                  return 'boolean' === schema ? dispatch((0, _actions.patch)(path, !JSON.parse(value))) : _this2.toggleEdit();
+                  return 'boolean' === schema ? dispatch((0, _actions.patch)(path, !JSON.parse(value))) : _this2.toggle('edit');
                 } },
               '' + value
             ),
@@ -421,6 +412,7 @@ store.dispatch((0, _actions.init)({
     number: 255713231,
     afsdf: [{ b: 'hello' }, false, false, NaN]
   },
+  x: null,
   abc: {
     def: {
       ghi: {},
@@ -35831,6 +35823,7 @@ function patchedObject(data, path, value) {
   };
   switch (typeof data === 'undefined' ? 'undefined' : _typeof(data)) {
     case 'object':
+      if (null === data) return null;
       return Array.isArray(data) ? data.map(function (item, i) {
         return it(i, item);
       }) : _lodash2.default.mapValues(data, function (val, key) {

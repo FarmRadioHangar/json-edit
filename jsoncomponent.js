@@ -44,16 +44,9 @@ class Item extends React.Component {
       errors   : '',
     }
   }
-  toggleExpanded() {
-    const { expanded } = this.state
+  toggle(property) {
     this.setState({
-      expanded : !expanded,
-    })
-  }
-  toggleEdit() {
-    const { edit } = this.state
-    this.setState({
-      edit : !edit,
+      [property]: !this.state[property]
     })
   }
   validate(e) {
@@ -84,7 +77,7 @@ class Item extends React.Component {
     const indent = `${indentation}px`
     const [ lb, rb ] = Array.isArray(value) ? ['[', ']'] : ['{', '}']
     const arrow = ( 
-      <span style={styles.arrow} onClick={::this.toggleExpanded}>{expanded ? (
+      <span style={styles.arrow} onClick={() => this.toggle('expanded')}>{expanded ? (
 	<span>&#9660;</span>
       ) : (
         <span>&#9654;</span>
@@ -134,14 +127,14 @@ class Item extends React.Component {
                 </div>
                 <div style={{...styles.layout.row, marginTop: '5px'}}>
                   <button onClick={() => {
-	            dispatch(patch(path, this.refs.input.value)); this.toggleEdit()}
+	            dispatch(patch(path, this.refs.input.value)); this.toggle('edit')}
 	          }>Save</button>
-                  <button style={{marginLeft: '5px'}} onClick={() => this.toggleEdit()}>Cancel</button>
+                  <button style={{marginLeft: '5px'}} onClick={() => this.toggle('edit')}>Cancel</button>
                 </div>
 	      </div>
 	    ) : (
               <div>{label && <span>{label}:&nbsp;</span>}
-	        <a href='#' onClick={() => 'boolean' === schema ? dispatch(patch(path, !JSON.parse(value))) : this.toggleEdit()}>
+	        <a href='#' onClick={() => 'boolean' === schema ? dispatch(patch(path, !JSON.parse(value))) : this.toggle('edit')}>
 		  {''+value}
 		</a>{delimiter}
               </div>
