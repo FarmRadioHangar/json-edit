@@ -67,10 +67,6 @@ var styles = {
     padding: '2px 5px',
     backgroundColor: '#fff'
   },
-  disabled: {
-    border: '1px solid #eee',
-    color: '#aaa'
-  },
   text: {
     fontFamily: 'monospace',
     fontSize: '12px',
@@ -245,7 +241,7 @@ var Item = function (_React$Component) {
               { style: _extends({}, styles.layout.row, { marginTop: '5px' }) },
               _react2.default.createElement(
                 'button',
-                { disabled: !!errors, style: errors ? styles.button : styles.button, onClick: function onClick() {
+                { disabled: !!errors, style: styles.button, onClick: function onClick() {
                     dispatch((0, _actions.patch)(path, _this2.refs.input.value, schema));_this2.toggle('edit');
                   } },
                 'Save'
@@ -270,7 +266,12 @@ var Item = function (_React$Component) {
             _react2.default.createElement(
               'a',
               { href: '#', onClick: function onClick() {
-                  return 'boolean' === schema ? dispatch((0, _actions.patch)(path, !JSON.parse(value), 'boolean')) : _this2.toggle('edit');
+                  if ('boolean' === schema) {
+                    dispatch((0, _actions.patch)(path, !JSON.parse(value), 'boolean'));
+                  } else {
+                    _this2.toggle('edit');
+                    _this2.setState({ errors: '' });
+                  }
                 } },
               '' + value
             ),
