@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.patch = patch;
 exports.init = init;
-function patch(path, value) {
+function patch(path, value, dataType) {
   return {
-    type: 'PATCH', value: value, path: path
+    type: 'PATCH', value: value, path: path, dataType: dataType
   };
 }
 
@@ -66,6 +66,10 @@ var styles = {
     fontSize: '11px',
     padding: '2px 5px',
     backgroundColor: '#fff'
+  },
+  disabled: {
+    border: '1px solid #eee',
+    color: '#aaa'
   },
   text: {
     fontFamily: 'monospace',
@@ -241,8 +245,8 @@ var Item = function (_React$Component) {
               { style: _extends({}, styles.layout.row, { marginTop: '5px' }) },
               _react2.default.createElement(
                 'button',
-                { style: styles.button, onClick: function onClick() {
-                    dispatch((0, _actions.patch)(path, _this2.refs.input.value));_this2.toggle('edit');
+                { disabled: !!errors, style: errors ? styles.button : styles.button, onClick: function onClick() {
+                    dispatch((0, _actions.patch)(path, _this2.refs.input.value, schema));_this2.toggle('edit');
                   } },
                 'Save'
               ),
@@ -266,7 +270,7 @@ var Item = function (_React$Component) {
             _react2.default.createElement(
               'a',
               { href: '#', onClick: function onClick() {
-                  return 'boolean' === schema ? dispatch((0, _actions.patch)(path, !JSON.parse(value))) : _this2.toggle('edit');
+                  return 'boolean' === schema ? dispatch((0, _actions.patch)(path, !JSON.parse(value), 'boolean')) : _this2.toggle('edit');
                 } },
               '' + value
             ),
@@ -354,6 +358,11 @@ var JsonComponent = function (_React$Component3) {
   }
 
   _createClass(JsonComponent, [{
+    key: 'getObject',
+    value: function getObject() {
+      return this.props.object;
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _props3 = this.props;
@@ -429,10 +438,11 @@ store.dispatch((0, _actions.init)({
   "type": "donut",
   "name": "Cake",
   "ppu": 0.55,
+  "active": false,
   "batters": {
     "batter": [{ "id": "1001", "type": "Regular" }, { "id": "1002", "type": "Chocolate" }, { "id": "1003", "type": "Blueberry" }, { "id": "1004", "type": "Devil's Food" }]
   },
-  "topping": [{ "id": "5001", "type": "None" }, { "id": "5002", "type": "Glazed" }, { "id": "5005", "type": "Sugar" }, { "id": "5007", "type": "Powdered Sugar" }, { "id": "5006", "type": "Chocolate with Sprinkles" }, { "id": "5003", "type": "Chocolate" }, { "id": "5004", "type": "Maple" }]
+  "topping": [{ "id": "5001", "type": "None", "active": true }, { "id": "5002", "type": "Glazed", "active": true }, { "id": "5005", "type": "Sugar", "active": true }, { "id": "5007", "type": "Powdered Sugar", "active": true }, { "id": "5006", "type": "Chocolate with Sprinkles", "active": true }, { "id": "5003", "type": "Chocolate", "active": true }, { "id": "5004", "type": "Maple", "active": true }]
 }));
 
 var App = function (_React$Component) {
@@ -447,14 +457,24 @@ var App = function (_React$Component) {
   _createClass(App, [{
     key: 'render',
     value: function render() {
+      var object = this.props.object;
+
       return _react2.default.createElement(
         'div',
-        null,
-        _react2.default.createElement(_jsontree2.default, null),
+        { style: { display: 'flex', flexDirection: 'row' } },
         _react2.default.createElement(
-          'button',
-          null,
-          'Save'
+          'div',
+          { style: { flex: 1 } },
+          _react2.default.createElement(_jsontree2.default, { ref: 'tree' })
+        ),
+        _react2.default.createElement(
+          'div',
+          { style: { flex: 1, border: '1px solid #999', backgroundColor: '#fafafa', padding: '8px' } },
+          _react2.default.createElement(
+            'pre',
+            { style: { margin: 0 } },
+            JSON.stringify(object, null, 2)
+          )
         )
       );
     }
@@ -463,10 +483,14 @@ var App = function (_React$Component) {
   return App;
 }(_react2.default.Component);
 
+var AppComponent = (0, _reactRedux.connect)(function (state) {
+  return state;
+})(App);
+
 _reactDom2.default.render(_react2.default.createElement(
   _reactRedux.Provider,
   { store: store },
-  _react2.default.createElement(App, null)
+  _react2.default.createElement(AppComponent, null)
 ), document.getElementById('main'));
 
 },{"./actions":1,"./jsontree":2,"./reducers":184,"react":173,"react-dom":6,"react-redux":9,"redux":179}],4:[function(require,module,exports){
@@ -35855,26 +35879,14 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function patchedObject(data, path, value) {
-  var match = arguments.length <= 3 || arguments[3] === undefined ? true : arguments[3];
-
-  var it = function it(key, val) {
-    var match_ = match && key == path[0];
-    return 1 === path.length && match_ ? value : patchedObject(val, path.slice(1), value, match_);
-  };
-  switch (typeof data === 'undefined' ? 'undefined' : _typeof(data)) {
-    case 'object':
-      if (null === data) return null;
-      return Array.isArray(data) ? data.map(function (item, i) {
-        return it(i, item);
-      }) : _lodash2.default.mapValues(data, function (val, key) {
-        return it(key, val);
-      });
-    case 'number':
-    case 'string':
-    case 'boolean':
-    default:
-      return data;
+function typed(value, type) {
+  if ('boolean' === type) {
+    // translate 'false' to false and 'true' to true
+    return JSON.parse(value);
+  } else if ('number' === type) {
+    return Number(value);
+  } else {
+    return value;
   }
 }
 
@@ -35896,7 +35908,30 @@ function object() {
     case 'INIT':
       return action.data;
     case 'PATCH':
-      return patchedObject(state, action.path, action.value);
+      var typedValue = typed(action.value, action.dataType);
+      var patched = function patched(data, path) {
+        var match = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
+
+        var it = function it(key, val) {
+          var _match = match && key == path[0];
+          return 1 === path.length && _match ? typedValue : patched(val, path.slice(1), _match);
+        };
+        switch (typeof data === 'undefined' ? 'undefined' : _typeof(data)) {
+          case 'object':
+            if (null === data) return null;
+            return Array.isArray(data) ? data.map(function (item, i) {
+              return it(i, item);
+            }) : _lodash2.default.mapValues(data, function (val, key) {
+              return it(key, val);
+            });
+          case 'number':
+          case 'string':
+          case 'boolean':
+          default:
+            return data;
+        }
+      };
+      return patched(state, action.path);
     default:
       return state;
   }

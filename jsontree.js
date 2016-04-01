@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { connect } 
+import { connect }
   from 'react-redux'
 import { patch }
   from './actions'
@@ -137,17 +137,22 @@ class Item extends React.Component {
                   </div>
                 </div>
                 <div style={{...styles.layout.row, marginTop: '5px'}}>
-                  <button style={styles.button} onClick={() => {
-                    dispatch(patch(path, this.refs.input.value)); this.toggle('edit')}
+                  <button disabled={!!errors} style={styles.button} onClick={() => {
+                    dispatch(patch(path, this.refs.input.value, schema)); this.toggle('edit')}
                   }>Save</button>
                   <button style={{...styles.button, marginLeft: '5px'}} onClick={() => this.toggle('edit')}>Cancel</button>
                 </div>
               </div>
             ) : (
               <div>{label && <span>{label}:&nbsp;</span>}
-                <a href='#' onClick={() => 'boolean' === schema ? dispatch(patch(path, !JSON.parse(value))) : this.toggle('edit')}>
-                  {''+value}
-                </a>{delimiter}
+                <a href='#' onClick={() => {
+                  if ('boolean' === schema) {
+                    dispatch(patch(path, !JSON.parse(value), 'boolean')) 
+                  } else {
+                    this.toggle('edit')
+                    this.setState({errors: ''})
+                  }
+                }}>{''+value}</a>{delimiter}
               </div>
             )}
           </div>
@@ -202,6 +207,9 @@ class JsonValue extends React.Component {
 }
 
 class JsonComponent extends React.Component {
+  getObject() {
+    return this.props.object
+  }
   render() {
     const { object, schema, dispatch } = this.props
     return (

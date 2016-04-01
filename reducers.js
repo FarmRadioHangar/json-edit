@@ -1,25 +1,14 @@
 import { combineReducers } from 'redux'
 import _ from 'lodash'
 
-function patchedObject(data, path, value, match = true) {
-  const it = (key, val) => {
-    const match_ = match && key == path[0]
-    return (1 === path.length && match_) 
-      ? value
-      : patchedObject(val, path.slice(1), value, match_)
-  }
-  switch (typeof data) {
-    case 'object':
-      if (null === data) 
-        return null
-      return Array.isArray(data) 
-        ? data.map((item, i) => it(i, item))
-        : _.mapValues(data, (val, key) => it(key, val))
-    case 'number':
-    case 'string':
-    case 'boolean':
-    default:
-      return data
+function typed(value, type) {
+  if ('boolean' === type) {
+    // translate 'false' to false and 'true' to true
+    return JSON.parse(value)
+  } else if ('number' === type) {
+    return Number(value)
+  } else {
+    return value
   }
 }
 
@@ -38,7 +27,29 @@ function object(state = {}, action) {
     case 'INIT':
       return action.data
     case 'PATCH':
-      return patchedObject(state, action.path, action.value)
+      const typedValue = typed(action.value, action.dataType)
+      const patched = (data, path, match = true) => {
+        const it = (key, val) => {
+          const _match = match && key == path[0]
+          return (1 === path.length && _match) 
+            ? typedValue 
+            : patched(val, path.slice(1), _match)
+        }
+        switch (typeof data) {
+          case 'object':
+            if (null === data) 
+              return null
+            return Array.isArray(data) 
+              ? data.map((item, i) => it(i, item))
+              : _.mapValues(data, (val, key) => it(key, val))
+          case 'number':
+          case 'string':
+          case 'boolean':
+          default:
+            return data
+        }
+      }
+      return patched(state, action.path)
     default:
       return state
   }

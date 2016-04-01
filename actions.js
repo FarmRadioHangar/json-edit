@@ -1,6 +1,6 @@
-export function patch(path, value) {
+export function patch(path, value, dataType) {
   return {
-    type: 'PATCH', value, path
+    type: 'PATCH', value, path, dataType
   }
 }
 

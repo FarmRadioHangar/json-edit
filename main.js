@@ -5,7 +5,7 @@ import JsonTree   from './jsontree'
 
 import { createStore } 
   from 'redux'
-import { Provider } 
+import { Provider, connect } 
   from 'react-redux'
 import { init }
   from './actions'
@@ -19,6 +19,7 @@ store.dispatch(init({
   "type": "donut",
   "name": "Cake",
   "ppu": 0.55,
+  "active": false,
   "batters": {
     "batter": [
       { "id": "1001", "type": "Regular" },
@@ -28,32 +29,37 @@ store.dispatch(init({
     ]
   },
   "topping": [
-    { "id": "5001", "type": "None" },
-    { "id": "5002", "type": "Glazed" },
-    { "id": "5005", "type": "Sugar" },
-    { "id": "5007", "type": "Powdered Sugar" },
-    { "id": "5006", "type": "Chocolate with Sprinkles" },
-    { "id": "5003", "type": "Chocolate" },
-    { "id": "5004", "type": "Maple" }
+    { "id": "5001", "type": "None", "active": true },
+    { "id": "5002", "type": "Glazed", "active": true },
+    { "id": "5005", "type": "Sugar", "active": true },
+    { "id": "5007", "type": "Powdered Sugar", "active": true },
+    { "id": "5006", "type": "Chocolate with Sprinkles", "active": true },
+    { "id": "5003", "type": "Chocolate", "active": true },
+    { "id": "5004", "type": "Maple", "active": true }
   ]
 }))
 
 class App extends React.Component {
   render() {
+    const { object } = this.props
     return (
-      <div>
-        <JsonTree />
-        <button>
-          Save
-        </button>
+      <div style={{display: 'flex', flexDirection: 'row'}}>
+        <div style={{flex: 1}}>
+          <JsonTree ref='tree' />
+        </div>
+        <div style={{flex: 1, border: '1px solid #999', backgroundColor: '#fafafa', padding: '8px'}}>
+          <pre style={{margin: 0}}>{JSON.stringify(object, null, 2)}</pre>
+        </div>
       </div>
     )
   }
 }
 
+const AppComponent = connect(state => state)(App)
+
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <AppComponent />
   </Provider>,
   document.getElementById('main')
 )
