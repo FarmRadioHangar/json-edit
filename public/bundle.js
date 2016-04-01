@@ -72,6 +72,11 @@ var styles = {
     fontSize: '12px',
     lineHeight: '20px'
   },
+  error: {
+    fontFamily: 'sans-serif',
+    fontSize: '11px',
+    color: '#f00'
+  },
   arrow: {
     color: '#999',
     marginLeft: '1px',
@@ -227,7 +232,7 @@ var Item = function (_React$Component) {
               ),
               _react2.default.createElement(
                 'div',
-                null,
+                { style: _extends({}, styles.error, { marginLeft: '8px' }) },
                 errors
               )
             ),
