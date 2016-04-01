@@ -404,28 +404,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var store = (0, _redux.createStore)(_reducers2.default);
 
 store.dispatch((0, _actions.init)({
-  tigo1: {
-    imei: 'texttexttext'
-  },
-  vodacom1: {
-    imei: 1301312355555555278319237,
-    number: 255713231,
-    afsdf: [{ b: 'hello' }, false, false, NaN]
-  },
-  x: null,
-  abc: {
-    def: {
-      ghi: {},
-      x: 123123123
-    }
-  },
-  void: null
+		"id": "0001",
+		"type": "donut",
+		"name": "Cake",
+		"ppu": 0.55,
+		"batters": {
+				"batter": [{ "id": "1001", "type": "Regular" }, { "id": "1002", "type": "Chocolate" }, { "id": "1003", "type": "Blueberry" }, { "id": "1004", "type": "Devil's Food" }]
+		},
+		"topping": [{ "id": "5001", "type": "None" }, { "id": "5002", "type": "Glazed" }, { "id": "5005", "type": "Sugar" }, { "id": "5007", "type": "Powdered Sugar" }, { "id": "5006", "type": "Chocolate with Sprinkles" }, { "id": "5003", "type": "Chocolate" }, { "id": "5004", "type": "Maple" }]
 }));
 
 _reactDom2.default.render(_react2.default.createElement(
-  _reactRedux.Provider,
-  { store: store },
-  _react2.default.createElement(_jsoncomponent2.default, null)
+		_reactRedux.Provider,
+		{ store: store },
+		_react2.default.createElement(_jsoncomponent2.default, null)
 ), document.getElementById('main'));
 
 },{"./actions":1,"./jsoncomponent":2,"./reducers":184,"react":173,"react-dom":6,"react-redux":9,"redux":179}],4:[function(require,module,exports){
