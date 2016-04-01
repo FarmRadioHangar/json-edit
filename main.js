@@ -1,7 +1,7 @@
 import React      from 'react'
 import ReactDOM   from 'react-dom'
 import reducers   from './reducers'
-import JsonObject from './jsoncomponent'
+import JsonTree   from './jsontree'
 
 import { createStore } 
   from 'redux'
@@ -12,7 +12,7 @@ import { init }
 
 const store = createStore(reducers)
 
-// JSON example data borrowed from https://adobe.github.io/Spry/samples/data_region/JSONDataSetSample.html#Example3
+// Example data borrowed from https://adobe.github.io/Spry/samples/data_region/JSONDataSetSample.html#Example3
 store.dispatch(init({
   "id": "0001",
   "void": null,
@@ -38,9 +38,22 @@ store.dispatch(init({
   ]
 }))
 
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <JsonTree />
+        <button>
+          Save
+        </button>
+      </div>
+    )
+  }
+}
+
 ReactDOM.render(
   <Provider store={store}>
-    <JsonObject />
+    <App />
   </Provider>,
   document.getElementById('main')
 )
