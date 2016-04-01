@@ -39,15 +39,30 @@ store.dispatch(init({
   ]
 }))
 
+const styles = {
+  layout: {
+    row: { 
+      display: 'flex', 
+      flexDirection: 'row' 
+    },
+  },
+  preview: {
+    flex: 1, 
+    border: '1px solid #999', 
+    backgroundColor: '#fafafa', 
+    padding: '8px'
+  },
+}
+
 class App extends React.Component {
   render() {
     const { object } = this.props
     return (
-      <div style={{display: 'flex', flexDirection: 'row'}}>
+      <div style={styles.layout.row}>
         <div style={{flex: 1}}>
-          <JsonTree ref='tree' />
+          <JsonTree />
         </div>
-        <div style={{flex: 1, border: '1px solid #999', backgroundColor: '#fafafa', padding: '8px'}}>
+        <div style={styles.preview}>
           <pre style={{margin: 0}}>{JSON.stringify(object, null, 2)}</pre>
         </div>
       </div>
